@@ -8,7 +8,8 @@ output:
 
 ## Loading and preprocessing the data
 
-```{r echo = TRUE}
+
+```r
 ##load ggplot2
 library(ggplot2)
 ### Unzip the file 
@@ -27,7 +28,8 @@ activity <- read.csv("activity.csv", header = TRUE,
 
 
 
-```{r echo = TRUE}
+
+```r
 ##Create a data frame without NAs
 activity_without_NA <- activity[complete.cases(activity),]
 
@@ -36,49 +38,64 @@ activity_without_NA$date <- as.factor(activity_without_NA$date)
 
 ##Create a variable with the sum of steps per day
 total_steps_per_day <- tapply(activity_without_NA$steps,                 activity_without_NA$date, sum)
-
 ```
 
 
-```{r echo = TRUE}
+
+```r
 ##make an histogram of the daily steps
 hist(total_steps_per_day, xlab = "Steps per day", ylab = "Frequency",
      main = "Graph 1: Histogram of total steps per day", col = "gold", border = "10",
      breaks = 15)
-
 ```
 
-```{r echo=TRUE}
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
+
+```r
 mean_steps <- round(mean(total_steps_per_day))
 median_steps <- median(total_steps_per_day)
-
 ```
 
 
-The mean (m= `r as.integer(mean_steps)`) and the median (median = `r as.integer(median_steps)`) corrobate what we see on the graph. Most daily values center around the 10.000 to 11.000 break.
+The mean (m= 10766) and the median (median = 10765) corrobate what we see on the graph. Most daily values center around the 10.000 to 11.000 break.
 
 
 
 ## 2. What is the average daily activity pattern?
-```{r echo=TRUE}
+
+```r
 mean_averaged_perday <- aggregate(activity_without_NA$steps, by = list(activity_without_NA$interval), mean)
 names(mean_averaged_perday) = c("Interval", "Means")
 ```
 
 
-```{r echo=TRUE}
+
+```r
 library(ggplot2)
 ggplot(mean_averaged_perday, aes(Interval, Means)) + geom_line()
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+
 On a 30-day measurement we find that, on average, the highest activity peak falls along the 820 and 850 intervals as can be seen on the following table:
 
-```{r echo=TRUE}
-print(head(mean_averaged_perday[order(mean_averaged_perday$Means, decreasing = TRUE),]))
 
+```r
+print(head(mean_averaged_perday[order(mean_averaged_perday$Means, decreasing = TRUE),]))
 ```
 
-835 is the highest interval with a peak activity of `r as.numeric(mean_averaged_perday[104,2])`. In other words the highest activity peak is between 13:00 and 14:20 hours. 
+```
+##     Interval    Means
+## 104      835 206.1698
+## 105      840 195.9245
+## 107      850 183.3962
+## 106      845 179.5660
+## 103      830 177.3019
+## 101      820 171.1509
+```
+
+On average, 835 is the highest interval with a peak activity of 206.1698113. In other words the highest activity peak is between 13:00 and 14:20 hours. 
 
 ## Imputing missing values
 
